@@ -1,31 +1,3 @@
-// import React from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-// import "bootstrap/dist/css/bootstrap.min.css";
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import { Component } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -40,6 +12,7 @@ import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 
 import EventBus from "./common/EventBus";
+import PrivateRoute from "./components/private-route.component";
 
 type Props = {};
 
@@ -67,8 +40,6 @@ class App extends Component<Props, State> {
     if (user) {
       this.setState({
         currentUser: user,
-        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
-        showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
 
@@ -144,11 +115,14 @@ class App extends Component<Props, State> {
 
         <div className="container mt-3">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
+
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
+
+            <Route path="/" element={<PrivateRoute />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
           </Routes>
         </div>
 
