@@ -8,7 +8,7 @@ type Props = {};
 type State = {
   redirect: string | null,
   userReady: boolean,
-  currentUser: IUser & { accessToken: string }
+  currentUser: IUser & { token: string }
 }
 export default class Profile extends Component<Props, State> {
   constructor(props: Props) {
@@ -17,14 +17,14 @@ export default class Profile extends Component<Props, State> {
     this.state = {
       redirect: null,
       userReady: false,
-      currentUser: { accessToken: "" }
+      currentUser: { token: "" }
     };
   }
 
   componentDidMount() {
     const currentUser = AuthService.getCurrentUser();
 
-    if (!currentUser) this.setState({ redirect: "/home" });
+    if (!currentUser) this.setState({ redirect: "/login" });
     this.setState({ currentUser: currentUser, userReady: true })
   }
 
@@ -46,8 +46,8 @@ export default class Profile extends Component<Props, State> {
             </header>
             <p>
               <strong>Token:</strong>{" "}
-              {currentUser.accessToken.substring(0, 20)} ...{" "}
-              {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
+              {currentUser.token.substring(0, 20)} ...{" "}
+              {currentUser.token.substr(currentUser.token.length - 20)}
             </p>
             <p>
               <strong>Id:</strong>{" "}
