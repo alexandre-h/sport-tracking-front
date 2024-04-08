@@ -70,12 +70,18 @@ export default class Login extends Component<Props, State> {
         });
       },
       error => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+        let resMessage = "";
+        if (error.response.status == '401') {
+          resMessage = 'Invalide email ou mot de passe';
+        } else {
+          resMessage = "Une erreur c'est produite merci si le problème persite, contacter le support";
+        }
+
+        // (error.response &&
+        //   error.response.data &&
+        //   error.response.data.message) ||
+        // error.message ||
+        // error.toString();
 
         this.setState({
           loading: false,

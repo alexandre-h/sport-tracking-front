@@ -12,7 +12,7 @@ import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 
 import EventBus from "./common/EventBus";
-import PrivateRoute from "./components/private-route.component";
+import PrivateRoute from "./components/helpers/private-route.component";
 
 type Props = {};
 
