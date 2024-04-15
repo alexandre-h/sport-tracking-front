@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3000/";
 
 class AuthService {
-  login(email: string, password: string) {
+  async login(email: string, password: string) {
     return axios
       .post(API_URL + "auth/login", {
         email,
@@ -13,7 +13,6 @@ class AuthService {
         if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
-
         return response.data;
       });
   }
@@ -22,12 +21,17 @@ class AuthService {
     localStorage.removeItem("user");
   }
 
-  register(username: string, email: string, password: string) {
+  async register(username: string, email: string, password: string) {
     // TODO review api name
     return axios.post(API_URL + "users", {
       username,
       email,
       password
+    }).then(response => {
+      if (response.data.token) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+      }
+      return response.data;
     });
   }
 

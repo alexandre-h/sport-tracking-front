@@ -1,135 +1,33 @@
-import { Component } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+// export default App;
 
-import AuthService from "./services/auth.service";
-import IUser from './types/user.type';
-
-import Login from "./components/login.component";
-import Register from "./components/register.component";
-import Home from "./components/home.component";
-import Profile from "./components/profile.component";
-
-import EventBus from "./common/EventBus";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './components/helpers/authProvider';
+import Login from './components/login.component';
+import Home from './components/home.component';
+// import Navbar from './Navbar';
 import PrivateRoute from "./components/helpers/private-route.component";
+import Profile from './components/profile.component'
+import RegisterForm from './components/register.component'
+import Navbar from './components/navbar.component';
+import './App.css';
 
-type Props = {};
-
-type State = {
-  showModeratorBoard: boolean,
-  showAdminBoard: boolean,
-  currentUser: IUser | undefined
-}
-
-class App extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.logOut = this.logOut.bind(this);
-
-    this.state = {
-      showModeratorBoard: false,
-      showAdminBoard: false,
-      currentUser: undefined,
-    };
-  }
-
-  componentDidMount() {
-    const user = AuthService.getCurrentUser();
-
-    if (user) {
-      this.setState({
-        currentUser: user,
-      });
-    }
-
-    EventBus.on("logout", this.logOut);
-  }
-
-  componentWillUnmount() {
-    EventBus.remove("logout", this.logOut);
-  }
-
-  logOut() {
-    AuthService.logout();
-    this.setState({
-      showModeratorBoard: false,
-      showAdminBoard: false,
-      currentUser: undefined,
-    });
-  }
-
-  render() {
-    const { currentUser } = this.state;
-
-    return (
-      <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <Link to={"/"} className="navbar-brand">
-          </Link>
-          <div className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link to={"/home"} className="nav-link">
-                Home
-              </Link>
-            </li>
-
-            {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
-            )}
-          </div>
-
-          {currentUser ? (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/profile"} className="nav-link">
-                  {currentUser.username}
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={this.logOut}>
-                  LogOut
-                </a>
-              </li>
-            </div>
-          ) : (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/login"} className="nav-link">
-                  Login
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to={"/register"} className="nav-link">
-                  Sign Up
-                </Link>
-              </li>
-            </div>
-          )}
-        </nav>
-
-        <div className="container mt-3">
-          <Routes>
-
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-
-            <Route path="/" element={<PrivateRoute />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
-          </Routes>
-        </div>
-
-        { /*<AuthVerify logOut={this.logOut}/> */}
-      </div>
-    );
-  }
-}
+const App: React.FC = () => {
+  return (
+    <div className="vh-100 d-flex page">
+      <AuthProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/" element={<PrivateRoute />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </div>
+  );
+};
 
 export default App;

@@ -8,7 +8,7 @@ type Props = {};
 type State = {
   redirect: string | null,
   userReady: boolean,
-  currentUser: IUser & { token: string }
+  currentUser: { user: IUser, token: string }
 }
 export default class Profile extends Component<Props, State> {
   constructor(props: Props) {
@@ -17,13 +17,12 @@ export default class Profile extends Component<Props, State> {
     this.state = {
       redirect: null,
       userReady: false,
-      currentUser: { token: "" }
+      currentUser: { user: {}, token: "" }
     };
   }
 
   componentDidMount() {
     const currentUser = AuthService.getCurrentUser();
-
     if (!currentUser) this.setState({ redirect: "/login" });
     this.setState({ currentUser: currentUser, userReady: true })
   }
@@ -41,7 +40,7 @@ export default class Profile extends Component<Props, State> {
           <div>
             <header className="jumbotron">
               <h3>
-                <strong>{currentUser.username}</strong> Profile
+                <strong>{currentUser.user.username}</strong> Profile
               </h3>
             </header>
             <p>
@@ -51,17 +50,12 @@ export default class Profile extends Component<Props, State> {
             </p>
             <p>
               <strong>Id:</strong>{" "}
-              {currentUser.id}
+              {currentUser.user.id}
             </p>
             <p>
               <strong>Email:</strong>{" "}
-              {currentUser.email}
+              {currentUser.user.email}
             </p>
-            <strong>Authorities:</strong>
-            <ul>
-              {currentUser.roles &&
-                currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-            </ul>
           </div> : null}
       </div>
     );

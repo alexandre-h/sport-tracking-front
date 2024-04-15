@@ -1,178 +1,159 @@
-import { Component } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { Link } from "react-router-dom";
-import AuthService from "../services/auth.service";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './helpers/authProvider';
 
-type Props = {};
+const RegisterForm: React.FC = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+  const { register } = useAuth();
 
-type State = {
-  username: string,
-  email: string,
-  password: string,
-  successful: boolean,
-  message: string
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+    setUsernameError(validateUsername(event.target.value));
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+    setEmailError(validateEmail(event.target.value));
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+    setPasswordError(validatePassword(event.target.value));
+  };
+
+  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(event.target.value);
+    setConfirmPasswordError(validateConfirmPassword(password, event.target.value));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const usernameValidationError = validateUsername(username);
+    const emailValidationError = validateEmail(email);
+    const passwordValidationError = validatePassword(password);
+    const confirmPasswordValidationError = validateConfirmPassword(password, confirmPassword);
+
+    if (usernameValidationError || emailValidationError || passwordValidationError || confirmPasswordValidationError) {
+      // Display validation errors
+      setUsernameError(usernameValidationError);
+      setEmailError(emailValidationError);
+      setPasswordError(passwordValidationError);
+      setConfirmPasswordError(confirmPasswordValidationError);
+      return;
+    }
+
+    try {
+      const userData = register(username, email, password);
+      // Handle successful registration response
+      console.log('Registration successful:', userData);
+      // Redirect to home page or login page
+      navigate('/home');
+    } catch (error: any) {
+      // Handle registration error
+      setErrorMessage(error.message);
+    }
+  };
+
+  const validateUsername = (username: string): string => {
+    // Basic validation for username (e.g., minimum length)
+    return username.length >= 3 ? '' : 'Please enter a valid username (minimum 3 characters)';
+  };
+
+  const validateEmail = (email: string): string => {
+    // Basic email validation using regex
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email) ? '' : 'Please enter a valid email address';
+  };
+
+  const validatePassword = (password: string): string => {
+    // Basic validation for password (e.g., minimum length)
+    return password.length >= 6 ? '' : 'Password must be at least 6 characters long';
+  };
+
+  const validateConfirmPassword = (password: string, confirmPassword: string): string => {
+    // Validate password confirmation
+    return password === confirmPassword ? '' : 'Passwords do not match';
+  };
+
+  return (
+    <div className="container d-flex flex-column w-25 justify-content-center">
+      <div className="card p-5">
+        <h2 className="d-flex justify-content-center">Register</h2>
+        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-floating mb-3">
+            <input
+              placeholder=""
+              type="text"
+              className="form-control"
+              id="username"
+              value={username}
+              onChange={handleUsernameChange}
+              required
+            />
+            <label htmlFor="username" className="form-label">Username</label>
+            {usernameError && <div className="alert alert-danger" role="alert">{usernameError}</div>}
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              placeholder=""
+              type="email"
+              className="form-control"
+              id="email"
+              value={email}
+              onChange={handleEmailChange}
+              required
+            />
+            <label htmlFor="email" className="form-label">Email address</label>
+            {emailError && <div className="alert alert-danger" role="alert">
+              {emailError}
+            </div>
+            }
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              placeholder=""
+              type="password"
+              className="form-control"
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+            <label htmlFor="password" className="form-label">Password</label>
+            {passwordError && <div className="alert alert-danger" role="alert">{passwordError}</div>}
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              placeholder=""
+              type="password"
+              className="form-control"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              required
+            />
+            <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+            {confirmPasswordError && <div className="alert alert-danger" role="alert">{confirmPasswordError}</div>}
+          </div>
+          <div className="d-flex flex-inline">
+            <button type="submit" className="btn btn-primary w-50 me-2 fw-bold">Register</button>
+            <button className="btn btn-outline-primary w-50 ms-2 fw-bold" onClick={() => navigate("/login")}>Sign In</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
-export default class Register extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.handleRegister = this.handleRegister.bind(this);
-
-    this.state = {
-      username: "",
-      email: "",
-      password: "",
-      successful: false,
-      message: ""
-    };
-  }
-
-  validationSchema() {
-    return Yup.object().shape({
-      username: Yup.string()
-        .test(
-          "len",
-          "The username must be between 3 and 20 characters.",
-          (val: any) =>
-            val &&
-            val.toString().length >= 3 &&
-            val.toString().length <= 20
-        )
-        .required("This field is required!"),
-      email: Yup.string()
-        .email("This is not a valid email.")
-        .required("This field is required!"),
-      password: Yup.string()
-        .test(
-          "len",
-          "The password must be between 6 and 40 characters.",
-          (val: any) =>
-            val &&
-            val.toString().length >= 6 &&
-            val.toString().length <= 40
-        )
-        .required("This field is required!"),
-    });
-  }
-
-  handleRegister(formValue: { username: string; email: string; password: string }) {
-    const { username, email, password } = formValue;
-
-    this.setState({
-      message: "",
-      successful: false
-    });
-
-    AuthService.register(
-      username,
-      email,
-      password
-    ).then(
-      response => {
-        this.setState({
-          message: response.data.message,
-          successful: true
-        });
-      },
-      error => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
-        this.setState({
-          successful: false,
-          message: resMessage
-        });
-      }
-    );
-  }
-
-  render() {
-    const { successful, message } = this.state;
-
-    const initialValues = {
-      username: "",
-      email: "",
-      password: "",
-    };
-
-    return (
-      <div className="col-md-12">
-        <div className="card card-container">
-
-          <Formik
-            initialValues={initialValues}
-            validationSchema={this.validationSchema}
-            onSubmit={this.handleRegister}
-          >
-            <Form>
-              {!successful && (
-                <div>
-                  <div className="form-group">
-                    <label htmlFor="username"> Username </label>
-                    <Field name="username" type="text" className="form-control" />
-                    <ErrorMessage
-                      name="username"
-                      component="div"
-                      className="alert alert-danger"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="email"> Email </label>
-                    <Field name="email" type="email" className="form-control" />
-                    <ErrorMessage
-                      name="email"
-                      component="div"
-                      className="alert alert-danger"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="password"> Password </label>
-                    <Field
-                      name="password"
-                      type="password"
-                      className="form-control"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="alert alert-danger"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
-                  </div>
-                </div>
-              )}
-
-              {message && (
-                <div className="form-group">
-                  <div
-                    className={
-                      successful ? "alert alert-success" : "alert alert-danger"
-                    }
-                    role="alert"
-                  >
-                    {message}
-                  </div>
-                </div>
-              )}
-            </Form>
-          </Formik>
-          <p>Already have an account
-            <Link to={"/login"} className="nav-link">
-              Sign In
-            </Link>
-          </p>
-        </div>
-      </div>
-    );
-  }
-}
+export default RegisterForm;

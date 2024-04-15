@@ -1,0 +1,10 @@
+input {
+  border-radius: 1rem !important;
+}
+
+.login input[type="email"]:focus,
+.login input[type="password"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+}
