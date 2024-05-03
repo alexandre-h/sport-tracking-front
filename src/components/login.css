@@ -1,5 +1,11 @@
-input {
-  border-radius: 1rem !important;
+.login input {
+  border-radius: 2rem !important;
+  background-color: #2d2e2d;
+}
+
+.login .card {
+  background-color: #2d2e2d;
+  color: white;
 }
 
 .login input[type="email"]:focus,

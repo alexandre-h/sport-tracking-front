@@ -14,7 +14,8 @@ import './App.css';
 
 const App: React.FC = () => {
   return (
-    <div className="vh-100 d-flex page">
+    // <div className="vh-100 d-flex page">
+    <div className="">
       <AuthProvider>
         <Navbar />
         <Routes>
