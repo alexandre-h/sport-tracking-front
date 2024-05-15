@@ -1,164 +1,63 @@
-import { Component } from "react";
-import { Navigate } from "react-router-dom";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import AuthService from "../services/auth.service";
-import { Routes, Route, Link } from "react-router-dom";
-import Register from "./register.component";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './helpers/authProvider';
+import './login.css';
 
-interface RouterProps {
-  history: string;
-}
+const LoginForm: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-type Props = {};
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
 
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
 
-type State = {
-  redirect: string | null,
-  email: string,
-  password: string,
-  loading: boolean,
-  message: string
-};
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-export default class Login extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.handleLogin = this.handleLogin.bind(this);
-
-    this.state = {
-      redirect: null,
-      email: "",
-      password: "",
-      loading: false,
-      message: ""
-    };
-  }
-  componentDidMount() {
-    const currentUser = AuthService.getCurrentUser();
-
-    if (currentUser) {
-      this.setState({ redirect: "/profile" });
-    };
-  }
-
-  componentWillUnmount() {
-    window.location.reload();
-  }
-
-  validationSchema() {
-    return Yup.object().shape({
-      email: Yup.string().required("This field is required!"),
-      password: Yup.string().required("This field is required!"),
-    });
-  }
-
-
-  handleLogin(formValue: { email: string; password: string }) {
-    const { email, password } = formValue;
-
-    this.setState({
-      message: "",
-      loading: true
-    });
-
-
-    AuthService.login(email, password).then(
-      () => {
-        this.setState({
-          redirect: "/home"
-        });
-      },
-      error => {
-        let resMessage = "";
-        if (error.response.status == '401') {
-          resMessage = 'Invalide email ou mot de passe';
-        } else {
-          resMessage = "Une erreur c'est produite merci si le problème persite, contacter le support";
-        }
-
-        // (error.response &&
-        //   error.response.data &&
-        //   error.response.data.message) ||
-        // error.message ||
-        // error.toString();
-
-        this.setState({
-          loading: false,
-          message: resMessage
-        });
+    try {
+      login(email, password);
+      navigate('/home')
+    } catch (error: any) {
+      console.log('error.response === ', error.response)
+      if (error.response.status == '401') {
+        setErrorMessage('Invalide email ou mot de passe');
+      } else {
+        setErrorMessage("Une erreur c'est produite merci si le problème persite, contacter le support");
       }
-    );
-  }
-
-  render() {
-
-    if (this.state.redirect) {
-      return <Navigate to={this.state.redirect} />
     }
+  };
 
-    const { loading, message } = this.state;
-
-    const initialValues = {
-      email: "",
-      password: "",
-    };
-
-    return (
-      <div className="col-md-12" >
-        <div className="card card-container">
-
-          <Formik
-            initialValues={initialValues}
-            validationSchema={this.validationSchema}
-            onSubmit={this.handleLogin}
-          >
-            <Form>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <Field name="email" type="text" className="form-control" />
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="alert alert-danger"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <Field name="password" type="password" className="form-control" />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="alert alert-danger"
-                />
-              </div>
-
-              <div className="form-group">
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                  {loading && (
-                    <span className="spinner-border spinner-border-sm"></span>
-                  )}
-                  <span>Login</span>
-                </button>
-              </div>
-
-              {message && (
-                <div className="form-group">
-                  <div className="alert alert-danger" role="alert">
-                    {message}
-                  </div>
-                </div>
-              )}
-            </Form>
-          </Formik>
-          <p>Don't have an account
-            <Link to={"/register"} className="nav-link">
-              Sign Up
-            </Link>
-          </p>
+  return (
+    <div className="vh-100 d-flex page login vw-100">
+      <div className="container d-flex flex-column w-25 justify-content-center">
+        <div className="card p-5">
+          <h2 className="d-flex justify-content-center">Login</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-floating mb-3">
+              <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} placeholder="name@example.com" required />
+              <label htmlFor="email" className="">Email address</label>
+            </div>
+            <div className="form-floating mb-3">
+              <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} placeholder="" required />
+              <label htmlFor="password" className="form-label">Password</label>
+            </div>
+            {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}
+            <div className="d-flex d-flex-inline justify-content-space-between">
+              <button type="submit" className="btn btn-primary w-50 justify-content-center me-2 fw-bold">Login</button>
+              <button className="btn btn-outline-primary w-50 justify-content-center ms-2 fw-bold" onClick={() => navigate("/register")}>Sign up</button>
+            </div>
+          </form>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default LoginForm;
