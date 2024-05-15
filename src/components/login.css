@@ -1,5 +1,15 @@
-.login input {
+
+
+.login .page {
+  background-image: linear-gradient(to top right, #006BCE, #B4CFFA);
+}
+
+.login .card {
   border-radius: 2rem !important;
+}
+
+.login input {
+  border-radius: 1rem !important;
   background-color: #2d2e2d;
 }
 
@@ -13,4 +23,8 @@
   outline: none !important;
   box-shadow: none !important;
   -webkit-appearance: none !important;
+}
+
+.login label::after {
+  background: transparent !important;
 }

@@ -25,6 +25,7 @@ const LoginForm: React.FC = () => {
       login(email, password);
       navigate('/home')
     } catch (error: any) {
+      console.log('error.response === ', error.response)
       if (error.response.status == '401') {
         setErrorMessage('Invalide email ou mot de passe');
       } else {
@@ -34,8 +35,8 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="vh-100 d-flex page vw-100">
-      <div className="container d-flex flex-column w-25 login justify-content-center">
+    <div className="vh-100 d-flex page login vw-100">
+      <div className="container d-flex flex-column w-25 justify-content-center">
         <div className="card p-5">
           <h2 className="d-flex justify-content-center">Login</h2>
           <form onSubmit={handleSubmit}>

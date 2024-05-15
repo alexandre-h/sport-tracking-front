@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './helpers/authProvider';
+import './register.css';
 
 const RegisterForm: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -16,17 +17,18 @@ const RegisterForm: React.FC = () => {
   const { register } = useAuth();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-    setUsernameError(validateUsername(event.target.value));
+    console.log("event.target ::: ", event.target)
+    // setUsername(event.target.value);
+    // setUsernameError(validateUsername(event.target.value));
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+    // setEmail(event.target.value);
     setEmailError(validateEmail(event.target.value));
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
+    // setPassword(event.target.value);
     setPasswordError(validatePassword(event.target.value));
   };
 
@@ -86,6 +88,8 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
+
+    <div className="vh-100 d-flex page vw-100 register">
     <div className="container d-flex flex-column w-25 justify-content-center">
       <div className="card p-5">
         <h2 className="d-flex justify-content-center">Register</h2>
@@ -100,6 +104,7 @@ const RegisterForm: React.FC = () => {
               value={username}
               onChange={handleUsernameChange}
               required
+              autoComplete='off'
             />
             <label htmlFor="username" className="form-label">Username</label>
             {usernameError && <div className="alert alert-danger" role="alert">{usernameError}</div>}
@@ -152,6 +157,7 @@ const RegisterForm: React.FC = () => {
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };
