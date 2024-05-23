@@ -1,30 +1,32 @@
-
-
 .page {
     background-image: linear-gradient(to top right, #006BCE, #B4CFFA);
-  }
-  
- .register .card {
+}
+
+.register .card {
     border-radius: 2rem !important;
 }
-  
+
 .register input {
     border-radius: 1rem !important;
     background-color: #2d2e2d;
 }
-  
+
 .register .card {
     background-color: #2d2e2d;
     color: white;
 }
-  
+
 .register input[type="email"]:focus,
 .register input[type="password"]:focus {
     outline: none !important;
     box-shadow: none !important;
     -webkit-appearance: none !important;
 }
-  
+
+.register .value-set {
+    background-color: white;
+}
+
 .register label::after {
     background: transparent !important;
 }

@@ -5,28 +5,36 @@ const API_URL = "http://localhost:3000/";
 class AuthService {
   async login(email: string, password: string) {
     return axios
-      .post(API_URL + "auth/login", {
-        email,
-        password
+      .post(API_URL + "users/sign_in", {
+        user: { email, password }
       })
       .then(response => {
         if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
         return response.data;
-      });
+      })
   }
 
-  logout() {
-    localStorage.removeItem("user");
+  async logout() {
+    return axios.delete(API_URL + "users/sign_out").then(response => {
+      if (response) {
+        localStorage.removeItem("user");
+      }
+    })
+
   }
 
   async register(username: string, email: string, password: string) {
     // TODO review api name
     return axios.post(API_URL + "users", {
-      username,
-      email,
-      password
+      user: {
+        username,
+        email,
+        password,
+        first_name: username,
+        last_name: username
+      }
     }).then(response => {
       if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data))

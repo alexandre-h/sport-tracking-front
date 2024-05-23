@@ -25,7 +25,6 @@ const LoginForm: React.FC = () => {
       login(email, password);
       navigate('/home')
     } catch (error: any) {
-      console.log('error.response === ', error.response)
       if (error.response.status == '401') {
         setErrorMessage('Invalide email ou mot de passe');
       } else {
@@ -41,11 +40,11 @@ const LoginForm: React.FC = () => {
           <h2 className="d-flex justify-content-center">Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-floating mb-3">
-              <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} placeholder="name@example.com" required />
+              <input type="email" className={"form-control " + (email ? 'value-set' : '')} id="email" value={email} onChange={handleEmailChange} placeholder="name@example.com" required />
               <label htmlFor="email" className="">Email address</label>
             </div>
             <div className="form-floating mb-3">
-              <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} placeholder="" required />
+              <input type="password" className={"form-control " + (password ? 'value-set' : '')} id="password" value={password} onChange={handlePasswordChange} placeholder="" required />
               <label htmlFor="password" className="form-label">Password</label>
             </div>
             {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}

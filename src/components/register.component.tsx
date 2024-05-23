@@ -18,17 +18,17 @@ const RegisterForm: React.FC = () => {
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("event.target ::: ", event.target)
-    // setUsername(event.target.value);
-    // setUsernameError(validateUsername(event.target.value));
+    setUsername(event.target.value);
+    setUsernameError(validateUsername(event.target.value));
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setEmail(event.target.value);
+    setEmail(event.target.value);
     setEmailError(validateEmail(event.target.value));
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setPassword(event.target.value);
+    setPassword(event.target.value);
     setPasswordError(validatePassword(event.target.value));
   };
 
@@ -90,74 +90,73 @@ const RegisterForm: React.FC = () => {
   return (
 
     <div className="vh-100 d-flex page vw-100 register">
-    <div className="container d-flex flex-column w-25 justify-content-center">
-      <div className="card p-5">
-        <h2 className="d-flex justify-content-center">Register</h2>
-        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-floating mb-3">
-            <input
-              placeholder=""
-              type="text"
-              className="form-control"
-              id="username"
-              value={username}
-              onChange={handleUsernameChange}
-              required
-              autoComplete='off'
-            />
-            <label htmlFor="username" className="form-label">Username</label>
-            {usernameError && <div className="alert alert-danger" role="alert">{usernameError}</div>}
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              placeholder=""
-              type="email"
-              className="form-control"
-              id="email"
-              value={email}
-              onChange={handleEmailChange}
-              required
-            />
-            <label htmlFor="email" className="form-label">Email address</label>
-            {emailError && <div className="alert alert-danger" role="alert">
-              {emailError}
+      <div className="container d-flex flex-column w-25 justify-content-center">
+        <div className="card p-5">
+          <h2 className="d-flex justify-content-center">Register</h2>
+          {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+          <form onSubmit={handleSubmit}>
+            <div className="form-floating mb-3">
+              <input
+                placeholder=""
+                type="text"
+                className={"form-control " + (username ? 'value-set' : '')}
+                id="username"
+                value={username}
+                onChange={handleUsernameChange}
+                required
+              />
+              <label htmlFor="username" className="form-label">Username</label>
+              {usernameError && <div className="alert alert-danger" role="alert">{usernameError}</div>}
             </div>
-            }
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              placeholder=""
-              type="password"
-              className="form-control"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-            />
-            <label htmlFor="password" className="form-label">Password</label>
-            {passwordError && <div className="alert alert-danger" role="alert">{passwordError}</div>}
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              placeholder=""
-              type="password"
-              className="form-control"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-              required
-            />
-            <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-            {confirmPasswordError && <div className="alert alert-danger" role="alert">{confirmPasswordError}</div>}
-          </div>
-          <div className="d-flex flex-inline">
-            <button type="submit" className="btn btn-primary w-50 me-2 fw-bold">Register</button>
-            <button className="btn btn-outline-primary w-50 ms-2 fw-bold" onClick={() => navigate("/login")}>Sign In</button>
-          </div>
-        </form>
+            <div className="form-floating mb-3">
+              <input
+                placeholder=""
+                type="email"
+                className={"form-control " + (email ? 'value-set' : '')}
+                id="email"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
+              <label htmlFor="email" className="form-label">Email address</label>
+              {emailError && <div className="alert alert-danger" role="alert">
+                {emailError}
+              </div>
+              }
+            </div>
+            <div className="form-floating mb-3">
+              <input
+                placeholder=""
+                type="password"
+                className={"form-control " + (password ? 'value-set' : '')}
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+              />
+              <label htmlFor="password" className="form-label">Password</label>
+              {passwordError && <div className="alert alert-danger" role="alert">{passwordError}</div>}
+            </div>
+            <div className="form-floating mb-3">
+              <input
+                placeholder=""
+                type="password"
+                className={"form-control " + (confirmPassword ? 'value-set' : '')}
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                required
+              />
+              <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+              {confirmPasswordError && <div className="alert alert-danger" role="alert">{confirmPasswordError}</div>}
+            </div>
+            <div className="d-flex flex-inline">
+              <button type="submit" className="btn btn-primary w-50 me-2 fw-bold">Register</button>
+              <button className="btn btn-outline-primary w-50 ms-2 fw-bold" onClick={() => navigate("/login")}>Sign In</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
     </div>
   );
 };
