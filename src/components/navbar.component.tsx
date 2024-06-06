@@ -29,7 +29,11 @@ const Navbar: React.FC = () => {
                 Profile
               </Link>
             </li>
-
+            <li className="nav-item">
+              <Link to={"/seance"} className="nav-link">
+                Seance
+              </Link>
+            </li>
             <li className="nav-item">
               <a href="/login" className="nav-link" onClick={logout}>
                 LogOut

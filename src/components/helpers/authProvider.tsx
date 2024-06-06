@@ -39,27 +39,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      // Call the login function from your authentication service
       await AuthService.login(username, password);
-      console.log('here');
       navigate('/home')
       setCurrentUser(true);
     } catch (error) {
       console.error('Login failed:', error);
-      // Handle login failure (e.g., display error message)
     }
   };
 
-  const logout = () => {
-    // Perform logout logic (clear user session, etc.)
-    // setCurrentUser(null);
+  const logout = async () => {
     try {
-      // Call the login function from your authentication service
-      AuthService.logout();
+      await AuthService.logout();
       setCurrentUser(false);
     } catch (error) {
-      console.error('Log out success');
-      // Handle login failure (e.g., display error message)
+      console.error('Log out failed: ', error);
     }
   };
 
@@ -69,7 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       navigate('/home')
       setCurrentUser(true)
     } catch (error) {
-      console.log("error register ::: ", error)
+      console.log("error when register : ", error)
     }
   };
 

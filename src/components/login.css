@@ -1,5 +1,3 @@
-
-
 .login .page {
   background-image: linear-gradient(to top right, #006BCE, #B4CFFA);
 }
@@ -23,6 +21,10 @@
   outline: none !important;
   box-shadow: none !important;
   -webkit-appearance: none !important;
+}
+
+.login .value-set {
+  background-color: white;
 }
 
 .login label::after {

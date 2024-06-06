@@ -11,6 +11,8 @@ import Profile from './components/profile.component'
 import RegisterForm from './components/register.component'
 import Navbar from './components/navbar.component';
 import './App.css';
+import SeanceForm from './components/seance/seance-form.component';
+import Seance from './components/seance/seance.component';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +26,8 @@ const App: React.FC = () => {
           <Route path="/" element={<PrivateRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/seance" element={<Seance />} />
+            <Route path="/seance-form" element={<SeanceForm />} />
           </Route>
         </Routes>
       </AuthProvider>
