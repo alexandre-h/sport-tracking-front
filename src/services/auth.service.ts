@@ -26,7 +26,6 @@ class AuthService {
   }
 
   async register(username: string, email: string, password: string) {
-    // TODO review api name
     return axios.post(API_URL + "users", {
       user: {
         username,
