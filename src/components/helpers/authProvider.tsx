@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import IUser from '../../types/user.type';
 import AuthService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
+import { checkTokenValidity } from '../../utils/auth';
+import { removeToken } from '../../services/token.service';
 
 interface AuthProviderProps {
   children: ReactNode; // Indicates that the component accepts children
@@ -29,13 +30,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const verifyToken = async () => {
+      const isValid = await checkTokenValidity();
+      if (!isValid) {
+        removeToken();
+        setCurrentUser(false);
+        navigate('/login');
+      }
+    };
+
+    verifyToken();
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem('user');
     if (token) {
       setCurrentUser(true);
     }
   }, []);
-
-
 
   const login = async (username: string, password: string) => {
     try {
