@@ -3,3 +3,12 @@
   border-left: 0 !important;
   border-right: 0 !important;
 }
+
+.list {
+  list-style-type: none;
+}
+
+.block-separation {
+  border: solid 1px lightgrey;
+  border-radius: 10px;
+}

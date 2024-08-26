@@ -68,7 +68,8 @@ const SeanceForm: React.FC = () => {
                 </div>
                 {exercise.repetitions.map((repetitionValue, repetitionIndex) => (
                   <div className="form-floating col-lg-2">
-                    <input key={repetitionIndex} type="number" className="form-control input-form" id="repetitionValue" value={repetitionValue} onChange={(e) => handleRepetitionChange(e, index, repetitionIndex)} placeholder="repétition" required />
+                    <input key={repetitionIndex} type="number" className="form-control input-form" id="repetitionValue" value={repetitionValue}
+                      onChange={(e) => handleRepetitionChange(e, index, repetitionIndex)} placeholder="repétition" required />
                     <label htmlFor="repetitionValue" className="">répétition</label>
                   </div>
                 ))}

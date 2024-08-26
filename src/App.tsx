@@ -12,7 +12,7 @@ import Navbar from './components/navbar.component';
 import './App.css';
 import SeanceForm from './components/seance/seance-form.component';
 import Seance from './components/seance/seance.component';
-
+import SeanceTemplate from './components/seance/seance-template.component';
 const App: React.FC = () => {
   return (
     <div className="">
@@ -26,6 +26,7 @@ const App: React.FC = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/seance" element={<Seance />} />
             <Route path="/seance-form" element={<SeanceForm />} />
+            <Route path="/seance-template" element={<SeanceTemplate />} />
           </Route>
         </Routes>
       </AuthProvider>
