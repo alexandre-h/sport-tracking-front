@@ -40,9 +40,9 @@ const SeanceComponent: React.FC = () => {
                 {error && <p>{error}</p>}
                 {seance_template.length > 0 ? (
                     <ul className="col-lg-12 list">
-                        <div className="row mt-5 d-flex justify-content-around">
+                        <div className="row mt-5 d-flex">
                             {seance_template.map(item => (
-                                <li className="col-lg-3 block-separation mb-4 me-3" key={item.name}>
+                                <li className="col-lg-2 block-separation mb-4 me-4" key={item.name}>
                                     <h3>{item.name}</h3>
                                     {item.exercice && item.exercice.length > 0 ? (
                                         <ul className="list">

@@ -1,80 +1,8 @@
-// import { useState } from "react";
-// import SeanceTemplate from '../../types/seance_template.type';
-// import { Exercise } from '../../types/seance_template.type';
-
-// const SeanceTemplateForm: React.FC = () => {
-//   const [templateName, setTemplateName] = useState('');
-//   const [exercises, setExercises] = useState<Exercise[]>([]);
-//   const [exerciseName, setExerciseName] = useState('');
-
-//   const handleTemplateNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     setTemplateName(event.target.value);
-//   }
-
-//   const handleExerciseNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     setExerciseName(event.target.value);
-//   }
-
-//   const addExercise = () => {
-//     if (exerciseName !== '') {
-//       const newExercise: Exercise = { name: exerciseName };
-//       setExercises([...exercises, newExercise]);
-//       setExerciseName('');
-//     }
-//   };
-
-//   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-//     event.preventDefault();
-//     try {
-//       console.log('exercises ::: ', exercises);
-//     } catch (error: any) {
-//       console.log("Error submut seance form : ", error.message);
-//     }
-//   };
-
-//   return (
-//     <div className="container">
-//       <div className="row">
-//         <h2 className="col-lg-4 offset-lg-4 text-center">Créer votre séance</h2>
-//         <hr className="col-lg-6 offset-lg-3"></hr>
-
-//         <form onSubmit={handleSubmit} className="col-lg-12">
-//           <div className="form-floating mb-3 col-lg-4">
-//             <input type="text" className="form-control input-form" id="templateName" value={templateName} onChange={handleTemplateNameChange} placeholder="template name" required />
-//             <label htmlFor="seanceName" className="">Seance Name</label>
-//           </div>
-//           <ul>
-//             {exercises.map((exercise, index) => (
-//               <li key={index} className="row col-lg-12 align-items-center">
-//                 <div className="col-lg-2 fw-bold text-capitalize fs-5">
-//                   {exercise.name}
-//                 </div>
-//               </li>
-//             ))}
-//           </ul>
-//           <div>
-//             <div className="container row p-0 align-items-center">
-//               <div className="form-floating mb-3 col-lg-3">
-//                 <input type="text" className="form-control input-form" id="name" value={exerciseName} onChange={handleExerciseNameChange} placeholder="exercise name" />
-//                 <label htmlFor="name" className="ps-4">Nom de l'exercice</label>
-//               </div>
-//               <div className="col-lg-2 p-0">
-//                 <button type="button" className="btn btn-secondary h-25 " onClick={addExercise}>Add Exercise</button>
-//               </div>
-//             </div>
-//           </div>
-//           <button type="submit" className="btn btn-primary mt-3">Submit</button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-// export default SeanceTemplateForm;
-
 import { useState } from "react";
 import SeanceTemplate from '../../types/seance_template.type';
 import { Exercise } from '../../types/seance_template.type';
 import { saveTemplate } from '../../services/seance_template.service';
+import { useNavigate } from "react-router-dom";
 
 const SeanceTemplateForm: React.FC = () => {
   const [templateName, setTemplateName] = useState('');
@@ -82,7 +10,7 @@ const SeanceTemplateForm: React.FC = () => {
   const [exerciseName, setExerciseName] = useState('');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editExerciseName, setEditExerciseName] = useState('');
-
+  const navigate = useNavigate();
   const handleTemplateNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTemplateName(event.target.value);
   }
@@ -122,9 +50,9 @@ const SeanceTemplateForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const template: SeanceTemplate = { name: templateName, exercice: exercises }
-      console.log('exercises ::: ', template);
+      const template: SeanceTemplate = { name: templateName, exercice: exercises };
       saveTemplate(template);
+      navigate('/seance');
     } catch (error: any) {
       console.log("Error submit seance form: ", error.message);
     }
@@ -134,48 +62,88 @@ const SeanceTemplateForm: React.FC = () => {
     <div className="container">
       <div className="row">
         <h2 className="col-lg-4 offset-lg-4 text-center">Créer votre séance</h2>
-        <hr className="col-lg-6 offset-lg-3"></hr>
-
+        <hr className="col-lg-6 offset-lg-3" />
+  
         <form onSubmit={handleSubmit} className="col-lg-12">
-          <div className="form-floating mb-3 col-lg-4">
-            <input type="text" className="form-control input-form" id="templateName" value={templateName} onChange={handleTemplateNameChange} placeholder="template name" required />
-            <label htmlFor="templateName" className="">Seance Name</label>
+          {/* Seance Name Input */}
+          <div className="row justify-content-center">
+            <div className="form-floating mb-3 col-lg-6">
+              <input
+                type="text"
+                className="form-control input-form"
+                id="templateName"
+                value={templateName}
+                onChange={handleTemplateNameChange}
+                placeholder="template name"
+                required
+              />
+              <label htmlFor="templateName">Seance Name</label>
+            </div>
           </div>
-          <ul>
+  
+          {/* Exercises List */}
+          <ul className="list-unstyled">
             {exercises.map((exercise, index) => (
-              <li key={index} className="row col-lg-12 align-items-center">
+              <li key={index} className="row justify-content-center align-items-center mb-3">
                 {editingIndex === index ? (
-                  <div className="col-lg-12 d-flex align-items-center">
-                    <input type="text" value={editExerciseName} onChange={handleEditExerciseNameChange} className="form-control input-form col-lg-6" />
-                    <button type="button" className="btn btn-primary col-lg-2 ms-2" onClick={saveEditExercise}>Save</button>
+                  <div className="col-lg-6 ps-0 d-flex">
+                    <div className="form-floating flex-grow-1">
+                      <input
+                        type="text"
+                        value={editExerciseName}
+                        onChange={handleEditExerciseNameChange}
+                        className="form-control input-form"
+                        placeholder="Edit exercise name"
+                      />
+                      <label>Edit Exercise Name</label>
+                    </div>
+                    <button type="button" className="btn btn-primary ms-2" onClick={saveEditExercise}>
+                      Save
+                    </button>
                   </div>
                 ) : (
-                  <>
-                    <div className="col-lg-6 fw-bold text-capitalize fs-5">
-                      {exercise.name}
-                    </div>
-                    <button type="button" className="btn btn-secondary col-lg-2" onClick={() => editExercise(index)}>Edit</button>
-                  </>
+                  <div className="col-lg-6 d-flex justify-content-between align-items-center">
+                    <div className="fw-bold text-capitalize fs-5">{exercise.name}</div>
+                    <button type="button" className="btn btn-secondary" onClick={() => editExercise(index)}>
+                      Edit
+                    </button>
+                  </div>
                 )}
               </li>
             ))}
           </ul>
-          <div>
-            <div className="container row p-0 align-items-center">
-              <div className="form-floating mb-3 col-lg-3">
-                <input type="text" className="form-control input-form" id="name" value={exerciseName} onChange={handleExerciseNameChange} placeholder="exercise name" />
-                <label htmlFor="name" className="ps-4">Nom de l'exercice</label>
-              </div>
-              <div className="col-lg-2 p-0">
-                <button type="button" className="btn btn-secondary h-25" onClick={addExercise}>Add Exercise</button>
-              </div>
+  
+          {/* Add Exercise Section */}
+          <div className="row justify-content-center align-items-center mb-3">
+            <div className="form-floating col-lg-4 d-flex">
+              <input
+                type="text"
+                className="form-control input-form"
+                id="name"
+                value={exerciseName}
+                onChange={handleExerciseNameChange}
+                placeholder="exercise name"
+              />
+              <label htmlFor="name">Nom de l'exercice</label>
+            </div>
+            <div className="col-lg-2">
+              <button type="button" className="btn btn-secondary w-100" onClick={addExercise}>
+                Add Exercise
+              </button>
             </div>
           </div>
-          <button type="submit" className="btn btn-primary mt-3">Submit</button>
+  
+          {/* Submit Button */}
+          <div className="row justify-content-center">
+            <button type="submit" className="btn btn-primary col-lg-4">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
+  
 };
 
 export default SeanceTemplateForm;
