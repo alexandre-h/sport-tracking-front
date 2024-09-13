@@ -13,9 +13,8 @@ class SeanceService {
                 return response
             }).catch((error: any) => {
                 console.log("Error on save seance : ", error)
-            });;
+            });
     }
-
 
     convertRepetitionData(data: any) {
         return data.flatMap((item: any) => item.repetitions.map((rep: any) => ({ name: item.name, repetition: rep })));

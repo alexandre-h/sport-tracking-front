@@ -3,7 +3,6 @@ export default interface SeanceData {
     exercices_attributes: exercices_attribute[]
 }
 
-
 export interface exercices_attribute {
     name: string
     repetition: number
@@ -17,4 +16,4 @@ export interface default_seance {
 export interface Exercise {
     name: string;
     repetitions: number[];
-  }
+}
